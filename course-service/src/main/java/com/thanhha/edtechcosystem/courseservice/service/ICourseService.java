@@ -15,7 +15,7 @@ public interface ICourseService {
 
     CoursesDto createCourse(CoursesDto coursesDto);
 
-    EnrollmentDto enrollCourse(String idCourse);
+    EnrollmentDto enrollCourse(Long idCourse);
 
     CoursesDto updateCourse(CoursesDto coursesDto);
 }

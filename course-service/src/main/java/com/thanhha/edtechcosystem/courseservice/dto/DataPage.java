@@ -13,9 +13,9 @@ public class DataPage {
     private int page;
     private int total;
     private int limit;
-    private List<Object> dataList;
+    private List<?> dataList=new ArrayList<>();
 
-    public DataPage(int page, int limit, List<Object> dataList) {
+    public DataPage(int page, int limit, List<?> dataList) {
         this.page = page;
         this.limit = limit;
         double totalDouble= ((double)dataList.size())/((double)limit);
@@ -28,9 +28,9 @@ public class DataPage {
         )
             dataList=new ArrayList<>();
         else
-            dataList=fillObjects(dataList,startNumber, new ArrayList<Object>());
+            dataList=fillObjects(dataList,startNumber, new ArrayList<>());
     }
-    private List<Object> fillObjects(List<Object> dataList, int index, List<Object> objectList) {
+    private List<Object> fillObjects(List<?> dataList, int index, List<Object> objectList) {
         if(index>=endNumber)
             return objectList;
         if(index<startNumber)

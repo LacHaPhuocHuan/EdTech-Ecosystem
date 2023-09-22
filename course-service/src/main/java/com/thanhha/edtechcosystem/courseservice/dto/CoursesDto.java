@@ -19,5 +19,5 @@ public class CoursesDto {
     private Date createDate;
     private Date expiredDate;
     private String teacherId;
-    private String categoryId;
+    private Long categoryId;
 }

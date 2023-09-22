@@ -4,49 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c803963d-b1dd-45f1-8023-341d5f8526a7" name="Changes" comment="-commit all project file to git ( first )">
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/DataPage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/DataResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/AssessmentRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/CategoryRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/CourseRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/DocumentRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/EnrollmentRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/InstructorRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/LectureRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/LectureVideoRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/QuestionnaireRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/StudentRestImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IAssessmentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ICategoryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ICourseService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IDocumentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IEnrollmentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IInstructorService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ILectureService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ILectureVideoService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IQuestionnaireService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IStudentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/AssessmentServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/CategoryServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/CourseServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/DocumentServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/EnrollmentServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/InstructorServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/LectureServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/LectureVideoServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/QuestionnaireServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/StudentServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/utils/RedisUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="c803963d-b1dd-45f1-8023-341d5f8526a7" name="Changes" comment="-commit some file">
+      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/config/RedisConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/StudentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/StudentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/ICourse.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/ICourseRest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/DemoRest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/DemoConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/CoursesDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/CoursesDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/DataPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/DataPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/CourseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/CourseRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/InstructorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/InstructorRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/ICourseRest.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/ICourseRest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/CourseRestImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/CourseRestImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ICourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ICourseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/CourseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/CourseServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/utils/RedisUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/utils/RedisUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,15 +48,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/WorkSpaceDirectory/PROJECT-GITHUB-CV/ECommerceStore",
-    "settings.editor.selected.configurable": "com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/WorkSpaceDirectory/PROJECT-GITHUB-CV/ECommerceStore&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.thanhha.edtechcosystem.courseservice.config" />
+      <recent name="com.thanhha.edtechcosystem.courseservice.utils" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.ApiGatewayApplication">
     <configuration name="ApiGatewayApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.thanhha.edtechcosystem.apigateway.ApiGatewayApplication" />
@@ -153,11 +128,20 @@
       <option name="project" value="LOCAL" />
       <updated>1695378931220</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="-commit some file">
+      <option name="closed" value="true" />
+      <created>1695399540722</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1695399540722</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="-commit all project file to git ( first )" />
-    <option name="LAST_COMMIT_MESSAGE" value="-commit all project file to git ( first )" />
+    <MESSAGE value="-commit some file" />
+    <option name="LAST_COMMIT_MESSAGE" value="-commit some file" />
   </component>
 </project>

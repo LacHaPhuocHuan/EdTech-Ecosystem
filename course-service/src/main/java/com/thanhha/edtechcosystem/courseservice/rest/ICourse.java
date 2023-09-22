@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RequestMapping("/api/v1/courses/courses")
-public interface ICourseRest {
+public interface ICourse {
     //GET
     @GetMapping("/all")
     public ResponseEntity<?> getCoursePage(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -17,8 +17,7 @@ public interface ICourseRest {
     @GetMapping("/search")
     public ResponseEntity<?> findCourse(@RequestParam(value = "keyword", defaultValue = "") String keyword,
                                         @RequestParam(value = "category", required = false) String category,
-                                        @RequestParam(value = "price", required = false) BigDecimal price,
-                                        @RequestParam(value = "page", defaultValue = "1") int page);
+                                        @RequestParam(value = "price", required = false) BigDecimal price);
 
     //GET OWN COURSES
     @GetMapping({"/",""})
@@ -32,7 +31,7 @@ public interface ICourseRest {
 
     @PostMapping({"/registration/{id}"})
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<?> enrollCourse(@PathVariable("id") Long idCourse);
+    public ResponseEntity<?> enrollCourse(@PathVariable("id") String idCourse);
 
     //Update
     @PatchMapping({"/{id}"})

@@ -17,11 +17,9 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
     private final RedisTemplate<String, Object> redisTemplate;
 
-//    Đặt dữ liệu vào cache:
     public void putDataInCache(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
-//    Lấy dữ liệu từ cache:
     public Object getDataFromCache(String key) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -49,7 +47,6 @@ public class RedisUtils {
         redisTemplate.delete(key);
     }
 
-//    Xác định thời gian sống của cache (TTL)
     public void setTTL(String key, long timeoutInSeconds) {
         redisTemplate.expire(key, timeoutInSeconds, TimeUnit.SECONDS);
     }
@@ -59,5 +56,8 @@ public class RedisUtils {
         redisTemplate.opsForValue().set(key, value);
     }
 
+    public boolean checkExisted(String key){
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+    }
 
 }
