@@ -14,6 +14,7 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ServerErrorException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.expression.AccessException;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CourseServiceImpl implements ICourseService {
     private final String REDIS_CACHE_KEY="course_cache";
     private final CourseRepository courseRepository;
@@ -37,7 +39,8 @@ public class CourseServiceImpl implements ICourseService {
     private final RedisUtils redisUtils;
     private final CategoryRepository categoryRepository;
     private final InstructorRepository instructorRepository;
-    private final Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+    private Authentication authentication;
+
     @Override
     public DataPage getCoursePage(int page, int size) {
 
@@ -46,15 +49,29 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public DataPage findCourse(String keyword, String category, BigDecimal price, int page) {
+        if(category==null)
+            category="";
+        if(price==null)
+            price= BigDecimal.valueOf(0.00);
+        String finalCategory = category;
         return new DataPage(page,10,
                 this.getCourses().stream()
                         .filter(coursesDto -> {
-                            var instructor=instructorRepository.findById(coursesDto.getTeacherId()).orElseThrow(()->new ServerErrorException(500));
+                            var instructor=instructorRepository.findById(coursesDto.getInstructorId()).orElseThrow(()->new ServerErrorException(500));
+                            var categoryForThis =categoryRepository.findById(coursesDto.getCategoryId()).orElseThrow(()->new ServerErrorException(500));
+                            if(categoryForThis.getDescription()==null)
+                                categoryForThis.setDescription("");
                             return
-                                    coursesDto.getTitle().contains(keyword)
-                                    || coursesDto.getDescription().equals(keyword)
-                                    || instructor.getFullName().contains(keyword)
-                                    || instructor.getEmail().contains(keyword)
+                                    (
+                                            coursesDto.getTitle().toLowerCase().contains(keyword.toLowerCase())
+                                            || coursesDto.getDescription().toLowerCase().contains(keyword.toLowerCase())
+                                            || instructor.getFullName().toLowerCase().contains(keyword.toLowerCase())
+                                            || instructor.getEmail().toLowerCase().contains(keyword.toLowerCase())
+                                    ) &&
+                                    (
+                                            categoryForThis.getName().toLowerCase().contains(finalCategory.toLowerCase().trim())
+                                            || categoryForThis.getDescription().toLowerCase().contains(finalCategory.toLowerCase().trim())
+                                    )
                                     ;
                         })
                         .toList()
@@ -63,6 +80,7 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public CoursesDto getCourse(String coursesCode) {
+        authentication=SecurityContextHolder.getContext().getAuthentication();
         var enrollment =enrollmentRepository.findById(coursesCode).orElseThrow(()->new NotFoundException(""));
         if(!enrollment.getStudent().getEmail().equals(authentication.getPrincipal()))
             throw new BadRequestException("You need enrollment this course.");
@@ -72,9 +90,12 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public CoursesDto createCourse(CoursesDto coursesDto) {
+        authentication=SecurityContextHolder.getContext().getAuthentication();
         var course=modelMapper.map(coursesDto,Course.class);
         if(!Objects.isNull(course.getId()))
             course.setId(null);
+        if(authentication==null)
+            log.info("authentication is null");
         course.setInstructor(instructorRepository.findByEmail(authentication.getPrincipal().toString()).orElseThrow(()->new ServerErrorException(500)));
         course.setCategory(categoryRepository.findById(coursesDto.getCategoryId()).orElseThrow(()->new BadRequestException("Category don't correct.")));
         course.setCreateDate(new Date());
@@ -84,6 +105,7 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public EnrollmentDto enrollCourse(Long idCourse) {
+        authentication=SecurityContextHolder.getContext().getAuthentication();
         String email=authentication.getPrincipal().toString();
         Student student=studentRepository.findByEmail(email).orElseThrow(()->new NotFoundException("Your enrollment is unacceptable"));
         Course course= courseRepository.findById(idCourse).orElseThrow(()->new NotFoundException("Course don't exist."));
@@ -107,6 +129,8 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public CoursesDto updateCourse(CoursesDto coursesDto) {
+        authentication=SecurityContextHolder.getContext().getAuthentication();
+
         if(Objects.isNull(coursesDto.getId()))
             throw new BadRequestException("You need choose course to update");
         var course=courseRepository.findById(coursesDto.getId())
@@ -135,25 +159,31 @@ public class CourseServiceImpl implements ICourseService {
 
 
     private List<CoursesDto> getCourses(){
+        log.info("Redis : {}",redisUtils.checkExisted(REDIS_CACHE_KEY));
         if(redisUtils.checkExisted(REDIS_CACHE_KEY)) {
-            return (List<CoursesDto>) redisUtils.getDataFromCache(REDIS_CACHE_KEY);
+            var courses= (List<CoursesDto>) redisUtils.getDataFromCache(REDIS_CACHE_KEY,CoursesDto.class);
+            if(!Objects.isNull(courses) && !courses.isEmpty())
+                return courses;
         }
+        log.info("Get on DB");
         List<Course> courses=courseRepository.findAll();
         List<CoursesDto> coursesDto= courses.stream()
                 .map(course -> modelMapper.map(course,CoursesDto.class)).toList();
+        log.info("Courses size: {}", coursesDto.size());
         redisUtils.putDataInCache(REDIS_CACHE_KEY, coursesDto);
         return  coursesDto;
 
     }
 
     private CoursesDto findById(Long id){
+        log.info("Redis : {}",redisUtils.checkExisted(REDIS_CACHE_KEY));
         if(redisUtils.checkExisted(REDIS_CACHE_KEY)) {
-            var courses= (List<CoursesDto>) redisUtils.getDataFromCache(REDIS_CACHE_KEY);
-
-            return  courses.stream()
-                    .filter(coursesDto -> coursesDto.getId().equals(id))
-                    .findFirst().orElseThrow(NotFoundException::new)
-                    ;
+            var courses= (List<CoursesDto>) redisUtils.getDataFromCache(REDIS_CACHE_KEY,CoursesDto.class);
+            if(!Objects.isNull(courses) && !courses.isEmpty())
+                return  courses.stream()
+                        .filter(coursesDto -> coursesDto.getId().equals(id))
+                        .findFirst().orElseThrow(NotFoundException::new)
+                        ;
         }
         var courseOnDB =courseRepository.findById(id).orElseThrow(()->new NotFoundException("Course don't exist."));
         return modelMapper.map( courseOnDB, CoursesDto.class);

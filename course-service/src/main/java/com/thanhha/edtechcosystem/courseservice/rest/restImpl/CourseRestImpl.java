@@ -7,6 +7,7 @@ import com.thanhha.edtechcosystem.courseservice.dto.EnrollmentDto;
 import com.thanhha.edtechcosystem.courseservice.rest.ICourseRest;
 import com.thanhha.edtechcosystem.courseservice.service.ICourseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class CourseRestImpl implements ICourseRest {
     private final ICourseService iCourseService;
     @Override
@@ -68,6 +70,7 @@ public class CourseRestImpl implements ICourseRest {
 
     @Override
     public ResponseEntity<?> createCourse(CoursesDto coursesDto) {
+        log.info("Create Course!");
         CoursesDto courses=iCourseService.createCourse(coursesDto);
         EntityModel<CoursesDto> coursesDtoEntityModel=hateoas(courses);
         return ResponseEntity.ok(DataResponse.builder()
@@ -89,7 +92,7 @@ public class CourseRestImpl implements ICourseRest {
     }
 
     @Override
-    public ResponseEntity<?> updateCourse(CoursesDto coursesDto) {
+    public ResponseEntity<?> updateCourse(CoursesDto coursesDto, Long id) {
         CoursesDto courses=iCourseService.updateCourse(coursesDto);
         EntityModel<CoursesDto> coursesDtoEntityModel=hateoas(courses);
         return ResponseEntity.ok(DataResponse.builder()
@@ -106,7 +109,7 @@ public class CourseRestImpl implements ICourseRest {
         entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ICourseRest.class).getCoursePage(1,10)).withRel("GET"));
         entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ICourseRest.class).createCourse(new CoursesDto())).withRel("POST"));
         entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ICourseRest.class).findCourse("keyword","", BigDecimal.valueOf(100.00),1)).withRel("GET"));
-        entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ICourseRest.class).updateCourse(new CoursesDto())).withRel("PATCH"));
+        entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ICourseRest.class).updateCourse(new CoursesDto(), 0L)).withRel("PATCH"));
 
         return entityModel;
     }

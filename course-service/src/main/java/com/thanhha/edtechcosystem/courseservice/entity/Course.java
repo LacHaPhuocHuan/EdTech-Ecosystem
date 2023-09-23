@@ -23,7 +23,6 @@ public class Course {
     private Date startDate;
     private Date createDate;
     private Date expiredDate;
-    private String teacherId;
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")

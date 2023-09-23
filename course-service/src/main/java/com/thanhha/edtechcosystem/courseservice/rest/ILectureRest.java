@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public interface ILectureRest {
     //GET
     @GetMapping("/{id}")
-    public ResponseEntity<?> getLecture(@PathVariable("id") Long id);
+    public ResponseEntity<?> getLecture(@PathVariable("id") String id);
 
     @GetMapping("/by-course/{id}")
     public ResponseEntity<?> getLectureByCourse(@PathVariable("id") Long idCourse);
@@ -19,7 +19,7 @@ public interface ILectureRest {
 
     //PUT
     @PatchMapping({"/{id}"})
-    public ResponseEntity<?> createLecture(@RequestBody LectureDto lectureDto, @PathVariable("id") Long id);
+    public ResponseEntity<?> updateLecture(@RequestBody LectureDto lectureDto, @PathVariable("id") String id);
 
 
 

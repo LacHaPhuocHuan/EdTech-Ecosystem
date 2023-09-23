@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.*;
 public interface IDocumentRest {
     @GetMapping("/{id}")
     public ResponseEntity<?> getDocument(@PathVariable("id") String id);
-    @PostMapping("/{id}")
-    public ResponseEntity<?> getDocument(@RequestBody DocumentDto documentDto);
+    @PostMapping("")
+    public ResponseEntity<?> createDocument(@RequestBody DocumentDto documentDto);
 }

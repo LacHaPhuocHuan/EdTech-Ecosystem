@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/courses/categories")
 public interface ICategoryRest {
+
     //GET
+    @GetMapping({"","/"})
+    public ResponseEntity<?> getAll();
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategory(@PathVariable("id") Long id);
 

@@ -35,7 +35,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     {
 
         //phase 01
-        var contextPath=request.getContextPath();
+        var contextPath=request.getServletPath();
         log.info("Request to path : {}", contextPath);
         var authToken=request.getHeader("Authorization");
         if(authToken==null || !authToken.startsWith("Bearer")) {
@@ -50,9 +50,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         ){
             var jwtToken=jwtTokenRepository.findByToken(token);
             Collection<? extends GrantedAuthority> authorities=jwtService.extractAuth(token);
-            log.info("Authority : {}", authorities.toString());
 
-            if(jwtToken.isDisable() &&
+            log.info("Authority : {} \n Size: {}", authorities.toString(), authorities.size());
+
+            if(!jwtToken.isDisable() &&
                     Duration.between(Instant.now(),jwtToken.getExpireDate()).toMillis()>0
              ){
                 UsernamePasswordAuthenticationToken authenticationToken=
@@ -62,7 +63,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
-
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 log.info("Authentication Jwt is successful with role {}", username);
             }

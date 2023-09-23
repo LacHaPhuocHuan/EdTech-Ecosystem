@@ -32,6 +32,7 @@ public class UserService {
         ObjectMapper objectMapper=  new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         JwtTokenDto jwtToken =objectMapper.readValue(bytes,JwtTokenDto.class);
+        jwtToken.setDisable(false);
         jwtTokenRepository.save(jwtToken);
     }
     @KafkaListener(id = "userGroup", topics = "new-user")

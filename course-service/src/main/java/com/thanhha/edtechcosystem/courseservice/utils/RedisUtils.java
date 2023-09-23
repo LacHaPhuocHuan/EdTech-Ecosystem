@@ -1,14 +1,20 @@
 package com.thanhha.edtechcosystem.courseservice.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -20,26 +26,44 @@ public class RedisUtils {
     public void putDataInCache(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
-    public Object getDataFromCache(String key) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public <T> Object getDataFromCache(String key ,Class<T> t)  {
+        ObjectMapper obj=new ObjectMapper();
         try {
             log.info("Use Cache!");
             return redisTemplate.opsForValue().get(key);
-
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             try {
                 log.info("BYTE [] : {}", redisTemplate.dump(key));
-                String jsonData= (String) redisTemplate.opsForValue().get(key);
-                if(StringUtils.isBlank(jsonData))
-                    return null;
-                ObjectMapper obj=new ObjectMapper();
                 log.info("Solution 02");
-                return obj.readValue(jsonData, List.class);
+                return obj.readValue(redisTemplate.dump(key), ArrayList.class);
             }catch (Exception e){
+                log.error(e.getMessage());
+                try{
+                    log.info("Solution 03");
+                    String json= redisTemplate.getStringSerializer().toString();
+                    String fixedJsonString = obj.writeValueAsString(json);
+                    return obj.readValue(fixedJsonString, ArrayList.class);
+                }catch (Exception exception){
+                    log.error(exception.getMessage());
+                    try{
+                        log.info("solution 04");
+                        HashMapping hashMapping=new HashMapping();
+                        return hashMapping.loadHash(key);
+                    }catch (Exception exception1)
+                    {
+                        log.error(e.getMessage());
+
+                    }
+                }
                 redisTemplate.delete(key);
+                log.info("Exist after delete :{}", checkExisted(key));
             }
         }
        return null;
+    }
+    public Object getDataFromCache(String key){
+        return redisTemplate.opsForValue().get(key);
     }
 
 //    Xóa dữ liệu khỏi cache:

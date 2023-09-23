@@ -16,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class EnrollmentDto {
     private String enrolledCode;
-    private Course course;
-    private Student student;
+    private CoursesDto course;
+    private String studentId;
     private Date enrolledDate;
 }

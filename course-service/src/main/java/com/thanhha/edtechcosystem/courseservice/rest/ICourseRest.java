@@ -27,7 +27,7 @@ public interface ICourseRest {
 
     //POST
     @PostMapping({"","/"})
-    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasAuthority('teacher_change')")
     public ResponseEntity<?> createCourse(@RequestBody CoursesDto coursesDto);
 
     @PostMapping({"/registration/{id}"})
@@ -36,8 +36,8 @@ public interface ICourseRest {
 
     //Update
     @PatchMapping({"/{id}"})
-    @PreAuthorize("hasAnyRole('ROLE_TEACHER','ROLE_TEACHER')")
-    public ResponseEntity<?> updateCourse(@RequestBody CoursesDto coursesDto);
+    @PreAuthorize("hasAnyRole('ROLE_TEACHER','ROLE_ADMIN')")
+    public ResponseEntity<?> updateCourse(@RequestBody CoursesDto coursesDto, @PathVariable("id") Long id);
 
 
 

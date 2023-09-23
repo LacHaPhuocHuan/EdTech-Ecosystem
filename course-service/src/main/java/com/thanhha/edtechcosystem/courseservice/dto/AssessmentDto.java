@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class AssessmentDto {
+    @NotNull
     private Long id;
 
     private String title;
@@ -25,7 +27,7 @@ public class AssessmentDto {
 
     private String description;
 
-    private List<Question> questions;
+    private List<QuestionDto> questions;
 
     private AssessmentStatus status;
 }
