@@ -10,9 +10,9 @@ public interface IAssessmentRest {
     //GET
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAssessment(@PathVariable("id") String id);
+    public ResponseEntity<?> getAssessment(@PathVariable("id") Long id);
 
-    @GetMapping("/{idCourse}")
+    @GetMapping("/courses/{idCourse}")
     public ResponseEntity<?> getAllAssessment(@PathVariable("idCourse") String idCourse);
 
     //POST
@@ -22,7 +22,7 @@ public interface IAssessmentRest {
     public ResponseEntity<?> createAssessment(@RequestBody AssessmentDto assessmentDto);
 
     //Update
-    @PreAuthorize("hasAnyRoles('ROLE_ADMIN', 'ROLE_TEACHER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
     @PatchMapping({"","/"})
     public ResponseEntity<?> updateAssessment(@RequestBody AssessmentDto assessmentDto);
 

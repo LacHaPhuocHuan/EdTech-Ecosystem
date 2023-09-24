@@ -24,7 +24,6 @@ public interface ICourseRest {
     @GetMapping({"/",""})
     public ResponseEntity<?> goCourses(@RequestParam("courseCode") String coursesCode);
 
-
     //POST
     @PostMapping({"","/"})
     @PreAuthorize("hasAuthority('teacher_change')")

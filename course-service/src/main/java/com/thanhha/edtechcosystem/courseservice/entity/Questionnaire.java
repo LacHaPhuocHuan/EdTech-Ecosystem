@@ -19,8 +19,7 @@ public class Questionnaire {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    @OneToMany(mappedBy = "questionnaire")
-    private List<Question> questions;
+
     @OneToOne()
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;

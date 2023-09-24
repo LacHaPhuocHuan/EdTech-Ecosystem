@@ -19,5 +19,5 @@ public class QuestionnaireDto {
     private Long id;
     private String description;
     private Long assessmentId;
-    private List<Question> questions;
+    private List<QuestionDto> questions;
 }

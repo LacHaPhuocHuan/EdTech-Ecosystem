@@ -10,6 +10,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class CategoryRestImpl implements ICategoryRest {
@@ -49,8 +51,12 @@ public class CategoryRestImpl implements ICategoryRest {
     }
     @Override
     public ResponseEntity<?> getAll() {
-        //todo ...use cache
-        return null;
+        List<CategoryDto> categories=iCategoryService.getAll();
+        return ResponseEntity.ok().body(
+                DataResponse.builder().data(
+                        categories.stream().map(this::hateoas).toList()
+                ).message("OK").build()
+        );
     }
 
 

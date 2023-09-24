@@ -8,6 +8,7 @@ import com.thanhha.edtechcosystem.courseservice.service.ILectureService;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LectureServiceImpl implements ILectureService {
     private final LectureRepository lectureRepository;
     private final ModelMapper modelMapper;
@@ -35,18 +37,19 @@ public class LectureServiceImpl implements ILectureService {
 
     @Override
     public LectureDto createLecture(LectureDto lectureDto) {
+        log.info("CREATE LECTURE");
         if(!validLecture(lectureDto))
             throw new BadRequestException("Lecture don't correct");
         var lecture=modelMapper.map(lectureDto, Lecture.class);
-        lecture.setCourse(courseRepository.findById(lectureDto.getCourseId()).orElseThrow());
+        lecture.setCourse(courseRepository.findById(lectureDto.getCourseId()).orElseThrow(NotFoundException::new));
         var saveLecture=lectureRepository.save(lecture);
         return modelMapper.map(saveLecture,LectureDto.class);
     }
 
     private boolean validLecture(LectureDto lectureDto) {
         return courseRepository.existsById(lectureDto.getCourseId()) &&
-                Objects.isNull(lectureDto.getTitle())
-                && Objects.isNull(lectureDto.getContent());
+                !Objects.isNull(lectureDto.getTitle())
+                && !Objects.isNull(lectureDto.getContent());
     }
 
     @Override

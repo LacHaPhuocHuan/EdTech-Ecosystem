@@ -4,6 +4,7 @@ import com.thanhha.edtechcosystem.courseservice.dto.AssessmentDto;
 import com.thanhha.edtechcosystem.courseservice.dto.DataResponse;
 import com.thanhha.edtechcosystem.courseservice.rest.IAssessmentRest;
 import com.thanhha.edtechcosystem.courseservice.service.IAssessmentService;
+import jakarta.ws.rs.BadRequestException;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
@@ -19,8 +20,14 @@ import java.util.List;
 public class AssessmentRestImpl implements IAssessmentRest {
     private final IAssessmentService assessmentService;
     @Override
-    public ResponseEntity<?> getAssessment(String id) {
-        var assessment=assessmentService.getById(id);
+    public ResponseEntity<?> getAssessment(Long id) {
+        AssessmentDto assessment=null;
+        try {
+             assessment = assessmentService.getById(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BadRequestException(e.getMessage());
+        }
         return ResponseEntity.ok(DataResponse.builder().data(hateoas(assessment)).message("").build());
     }
 
@@ -46,7 +53,7 @@ public class AssessmentRestImpl implements IAssessmentRest {
     private EntityModel<AssessmentDto> hateoas(AssessmentDto object){
         EntityModel<AssessmentDto> entityModel= EntityModel.of(object);
         //todo...
-        entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(IAssessmentRest.class).getAssessment(String.valueOf(object.getId()))).withRel("GET"));
+        entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(IAssessmentRest.class).getAssessment(object.getId())).withRel("GET"));
         entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(IAssessmentRest.class).createAssessment(null)).withRel("POST"));
         entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(IAssessmentRest.class).getAllAssessment("1")).withRel("GET"));
         entityModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(IAssessmentRest.class).updateAssessment(null)).withRel("PATCH"));

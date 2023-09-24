@@ -27,17 +27,22 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(rollbackFor = IOException.class)
 public class LectureVideoServiceImpl implements ILectureVideoService {
     private final LectureVideoRepository lectureVideoRepository;
     private final ModelMapper modelMapper;
-    private final StorageProperties properties;
     private final LectureRepository lectureRepository;
-    private final Path rootLocation=Paths.get(properties.getLocation());
+    private final Path rootLocation;
 
+    public LectureVideoServiceImpl(LectureVideoRepository lectureVideoRepository, ModelMapper modelMapper, StorageProperties properties, LectureRepository lectureRepository) {
+        this.lectureVideoRepository = lectureVideoRepository;
+        this.modelMapper = modelMapper;
+        this.lectureRepository = lectureRepository;
+        this.rootLocation = Paths.get(properties.getLocation());
+    }
 
     @Override
     public LectureVideoDto getById(Long id) {
@@ -55,7 +60,7 @@ public class LectureVideoServiceImpl implements ILectureVideoService {
                 throw new StorageException("Failed to store empty file.");
             }
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(Objects.requireNonNull(file.getOriginalFilename())))
+                            Paths.get(UUID.randomUUID().toString().substring(10)+file.getOriginalFilename()))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check

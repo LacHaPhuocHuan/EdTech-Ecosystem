@@ -18,14 +18,14 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class AssessmentDto {
-    @NotNull
     private Long id;
 
     private String title;
 
-    private String courseId;
+    private Long courseId;
 
     private String description;
+    private Long questionnaireId;
 
     private List<QuestionDto> questions;
 

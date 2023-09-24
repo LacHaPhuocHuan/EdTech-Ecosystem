@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -48,5 +49,11 @@ public class CategoryServiceImpl implements ICategoryService {
             category.setDescription(categoryDto.getDescription());
         var saveCategory=categoryRepository.save(category);
         return modelMapper.map(category, CategoryDto.class);
+    }
+
+    @Override
+    public List<CategoryDto> getAll() {
+        List<Category> categories=categoryRepository.findAll();
+        return categories.stream().map(category -> modelMapper.map(category,CategoryDto.class)).toList();
     }
 }
