@@ -25,6 +25,7 @@ public class CourseRestImpl implements ICourseRest {
     @Override
     public ResponseEntity<?> getCoursePage(int page, int size) {
         DataPage courses=iCourseService.getCoursePage(page,size);
+        log.info("GET PAGE: {}", page);
         List<EntityModel<CoursesDto>> courseEntityModels=courses
                 .getDataList().stream().map(o -> {
                             CoursesDto coursesDto=(CoursesDto) o;

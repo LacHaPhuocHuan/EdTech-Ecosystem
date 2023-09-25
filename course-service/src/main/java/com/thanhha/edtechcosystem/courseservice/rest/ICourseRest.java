@@ -1,6 +1,9 @@
 package com.thanhha.edtechcosystem.courseservice.rest;
 
 import com.thanhha.edtechcosystem.courseservice.dto.CoursesDto;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,12 @@ public interface ICourseRest {
 
     //Update
     @PatchMapping({"/{id}"})
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "course_course", key ="ById_'+#id"),
+                    @CacheEvict(value = "course_course", key = "all")
+            }
+    )
     @PreAuthorize("hasAnyRole('ROLE_TEACHER','ROLE_ADMIN')")
     public ResponseEntity<?> updateCourse(@RequestBody CoursesDto coursesDto, @PathVariable("id") Long id);
 

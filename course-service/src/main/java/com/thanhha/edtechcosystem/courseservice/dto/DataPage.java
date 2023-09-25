@@ -2,12 +2,13 @@ package com.thanhha.edtechcosystem.courseservice.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
-public class DataPage {
+public class DataPage implements Serializable {
     private int startNumber;
     private int endNumber;
     private int page;

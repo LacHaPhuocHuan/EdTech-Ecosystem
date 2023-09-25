@@ -1,20 +1,15 @@
 package com.thanhha.edtechcosystem.courseservice.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+
 import java.util.concurrent.TimeUnit;
 
 @Service

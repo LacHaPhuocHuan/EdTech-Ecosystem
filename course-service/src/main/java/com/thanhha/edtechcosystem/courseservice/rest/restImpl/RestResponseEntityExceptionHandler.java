@@ -22,7 +22,7 @@ public class RestResponseEntityExceptionHandler
             = { IllegalArgumentException.class, IllegalStateException.class })
     protected ResponseEntity<?> handleConflict(
             RuntimeException ex, WebRequest request) {
-
+        ex.printStackTrace();
         return new ResponseEntity<>(
                 DataResponse.builder()
                 .message(ex.getMessage())
@@ -36,6 +36,7 @@ public class RestResponseEntityExceptionHandler
             = { InternalServerErrorException.class, ServerErrorException.class })
     protected ResponseEntity<?> handleBadRequest(
             RuntimeException ex, WebRequest request) {
+        ex.printStackTrace();
         return new ResponseEntity<>(
                 DataResponse.builder()
                         .message(ex.getMessage())
@@ -49,6 +50,7 @@ public class RestResponseEntityExceptionHandler
             = {  UsernameNotFoundException.class, BadRequestException.class, NotFoundException.class, BadCredentialsException.class})
     protected ResponseEntity<?> handleBadRequest(
             Exception e, WebRequest request) {
+        e.printStackTrace();
         return new ResponseEntity<>(
                 DataResponse.builder()
                         .message(e.getMessage())

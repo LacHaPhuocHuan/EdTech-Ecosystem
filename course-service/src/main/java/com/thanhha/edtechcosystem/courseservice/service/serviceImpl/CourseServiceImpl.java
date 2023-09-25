@@ -9,6 +9,7 @@ import com.thanhha.edtechcosystem.courseservice.entity.Instructor;
 import com.thanhha.edtechcosystem.courseservice.entity.Student;
 import com.thanhha.edtechcosystem.courseservice.repository.*;
 import com.thanhha.edtechcosystem.courseservice.service.ICourseService;
+import com.thanhha.edtechcosystem.courseservice.utils.RedisCacheUtils;
 import com.thanhha.edtechcosystem.courseservice.utils.RedisUtils;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
@@ -16,16 +17,16 @@ import jakarta.ws.rs.ServerErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.expression.AccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +37,21 @@ public class CourseServiceImpl implements ICourseService {
     private final EnrollmentRepository enrollmentRepository;
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
-    private final RedisUtils redisUtils;
+//    private final RedisUtils redisUtils;
+    private final RedisCacheUtils redisCacheUtils;
     private final CategoryRepository categoryRepository;
     private final InstructorRepository instructorRepository;
     private Authentication authentication;
 
     @Override
     public DataPage getCoursePage(int page, int size) {
-
-        return new DataPage(page,size, this.getCourses());
+        var dataPage =new DataPage(page,size, this.getCourses());
+        var voidSave=saveTotalPage(dataPage.getTotal(), size);
+        return dataPage;
+    }
+    @CachePut(value = "course_courses_total")
+    private String saveTotalPage(int total, int size) {
+        return "page_"+total+"_"+size;
     }
 
     @Override
@@ -100,8 +107,11 @@ public class CourseServiceImpl implements ICourseService {
         course.setCategory(categoryRepository.findById(coursesDto.getCategoryId()).orElseThrow(()->new BadRequestException("Category don't correct.")));
         course.setCreateDate(new Date());
         Course saveCourse=courseRepository.save(course);
+        deleteCache();
         return modelMapper.map(course,CoursesDto.class);
     }
+
+
 
     @Override
     public EnrollmentDto enrollCourse(Long idCourse) {
@@ -153,39 +163,54 @@ public class CourseServiceImpl implements ICourseService {
             course.setExpiredDate(coursesDto.getExpiredDate());
         }
         var saveCourse=courseRepository.save(course);
-        redisUtils.evictDataFromCache(REDIS_CACHE_KEY);
+//        redisCacheUtils.evict(REDIS_CACHE_KEY);
         return modelMapper.map(saveCourse,CoursesDto.class);
     }
 
 
+    @Cacheable(value = "course_course", key = "all")
     private List<CoursesDto> getCourses(){
-        log.info("Redis : {}",redisUtils.checkExisted(REDIS_CACHE_KEY));
-        if(redisUtils.checkExisted(REDIS_CACHE_KEY)) {
-            var courses= (List<CoursesDto>) redisUtils.getDataFromCache(REDIS_CACHE_KEY,CoursesDto.class);
-            if(!Objects.isNull(courses) && !courses.isEmpty())
-                return courses;
-        }
-        log.info("Get on DB");
         List<Course> courses=courseRepository.findAll();
         List<CoursesDto> coursesDto= courses.stream()
                 .map(course -> modelMapper.map(course,CoursesDto.class)).toList();
         log.info("Courses size: {}", coursesDto.size());
-        redisUtils.putDataInCache(REDIS_CACHE_KEY, coursesDto);
         return  coursesDto;
 
     }
-
+    @Cacheable(value = "course_course", key ="'ById_'+#id")
     private CoursesDto findById(Long id){
-        log.info("Redis : {}",redisUtils.checkExisted(REDIS_CACHE_KEY));
-        if(redisUtils.checkExisted(REDIS_CACHE_KEY)) {
-            var courses= (List<CoursesDto>) redisUtils.getDataFromCache(REDIS_CACHE_KEY,CoursesDto.class);
-            if(!Objects.isNull(courses) && !courses.isEmpty())
-                return  courses.stream()
-                        .filter(coursesDto -> coursesDto.getId().equals(id))
-                        .findFirst().orElseThrow(NotFoundException::new)
-                        ;
+        try {
+            List<CoursesDto> courses=getCoursesInCache();
+            if(!courses.isEmpty())
+                return courses.stream().filter(coursesDto -> coursesDto.getId().equals(id)).findFirst().orElseThrow(NotFoundException::new);
+        }catch (Exception e){
+            log.error(e.getMessage());
         }
         var courseOnDB =courseRepository.findById(id).orElseThrow(()->new NotFoundException("Course don't exist."));
         return modelMapper.map( courseOnDB, CoursesDto.class);
+    }
+
+
+
+    //----------------------------------Handle Cache-----------------------------
+    @Cacheable(value = "course_course", key = "all")
+    private List<CoursesDto> getCoursesInCache() {
+        return new ArrayList<>();
+    }
+
+    private void deleteCache() {
+        String cacheKey= getTotalKey();
+        if(cacheKey==null)
+            return;
+        deletePageOnCache(cacheKey);
+    }
+
+    @CacheEvict(value = "course_course_page", key = "#cacheKey")
+    private void deletePageOnCache(String cacheKey) {
+    }
+
+    @Cacheable(value = "course_courses_total")
+    private String getTotalKey() {
+        return null;
     }
 }
