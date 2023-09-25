@@ -92,14 +92,12 @@ public class AssessmentServiceImpl implements IAssessmentService {
                     )
                     .peek(questionRepository::save)
                     .toList();
-            saveQuestionnaire.setQuestions(questions);
             assessment.setQuestionnaire(saveQuestionnaire);
             assessment.setCourse(course);
             var saveAssessment=assessmentRepository.save(assessment);
             saveQuestionnaire.setAssessment(saveAssessment);
             var result=modelMapper.map(saveAssessment,AssessmentDto.class);
-            if(!Objects.isNull(saveQuestionnaire.getQuestions()))
-                result.setQuestions(saveQuestionnaire.getQuestions().stream().map(question -> modelMapper.map(question, QuestionDto.class)).collect(Collectors.toList()));
+            result.setQuestions(questions.stream().map(question -> modelMapper.map(question, QuestionDto.class)).collect(Collectors.toList()));
             return result;
         }catch (Exception ignored){
             ignored.printStackTrace();

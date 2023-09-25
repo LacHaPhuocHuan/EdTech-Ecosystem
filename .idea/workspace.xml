@@ -4,34 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c803963d-b1dd-45f1-8023-341d5f8526a7" name="Changes" comment="Update application.properties">
-      <change afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/RestResponseEntityExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/AssessmentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/AssessmentDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/QuestionnaireDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/dto/QuestionnaireDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/entity/Questionnaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/entity/Questionnaire.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/AssessmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/AssessmentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/QuestionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/QuestionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/IAssessmentRest.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/IAssessmentRest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/ICourseRest.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/ICourseRest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/IQuestionnaireRest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/IStudentRest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/AssessmentRestImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/AssessmentRestImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/CategoryRestImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/CategoryRestImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/LectureVideoRestImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/LectureVideoRestImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/rest/restImpl/StudentRestImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IAssessmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IAssessmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ICategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/ICategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IQuestionnaireService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/IStudentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/AssessmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/AssessmentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/CategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/CategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/LectureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/LectureServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/LectureVideoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/LectureVideoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/QuestionnaireServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/service/serviceImpl/StudentServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/course-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/course-service/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="c803963d-b1dd-45f1-8023-341d5f8526a7" name="Changes" comment="Merge remote-tracking branch 'origin/main'" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -201,7 +174,15 @@
       <option name="project" value="LOCAL" />
       <updated>1695523640395</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Merge remote-tracking branch 'origin/main'">
+      <option name="closed" value="true" />
+      <created>1695605924199</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1695605924199</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -220,6 +201,7 @@
     <MESSAGE value="-commit some file" />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/compiler.xml&#10;#&#9;.idea/workspace.xml&#10;#&#9;course-service/pom.xml&#10;#&#9;course-service/src/main/java/com/thanhha/edtechcosystem/courseservice/repository/StudentRepository.java" />
     <MESSAGE value="Update application.properties" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update application.properties" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'" />
   </component>
 </project>
