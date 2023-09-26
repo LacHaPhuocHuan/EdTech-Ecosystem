@@ -9,7 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import java.math.BigDecimal;
 
 public interface ICourseService {
-    @Cacheable(value = "course_course_page", key = "'page_'+#page+'_'+#size")
+    @Cacheable(value = "course_course_data_page", key = "'page_'+#page+#size")
     DataPage getCoursePage(int page, int size);
 
     DataPage findCourse(String keyword, String category, BigDecimal price, int page);

@@ -10,7 +10,6 @@ import com.thanhha.edtechcosystem.courseservice.entity.Student;
 import com.thanhha.edtechcosystem.courseservice.repository.*;
 import com.thanhha.edtechcosystem.courseservice.service.ICourseService;
 import com.thanhha.edtechcosystem.courseservice.utils.RedisCacheUtils;
-import com.thanhha.edtechcosystem.courseservice.utils.RedisUtils;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ServerErrorException;
@@ -20,7 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.expression.AccessException;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class CourseServiceImpl implements ICourseService {
-    private final String REDIS_CACHE_KEY="course_cache";
+    private String REDIS_CACHE_KEY="";
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final StudentRepository studentRepository;
@@ -45,13 +44,28 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public DataPage getCoursePage(int page, int size) {
+        log.info("Get course with cache :{}","page_"+page+size);
         var dataPage =new DataPage(page,size, this.getCourses());
-        var voidSave=saveTotalPage(dataPage.getTotal(), size);
+        saveTotalPage(dataPage.getTotal(), size);
         return dataPage;
     }
-    @CachePut(value = "course_courses_total")
-    private String saveTotalPage(int total, int size) {
-        return "page_"+total+"_"+size;
+    @Cacheable(value = "course_course", key = "all")
+    private List<CoursesDto> getCourses(){
+        List<Course> courses=courseRepository.findAll();
+        List<CoursesDto> coursesDto= courses.stream()
+                .map(course -> modelMapper.map(course,CoursesDto.class)).toList();
+        log.info("Courses size: {}", coursesDto.size());
+        return  coursesDto;
+    }
+
+
+
+    @CachePut(value = "course_course_maxPage_value", key = "'ok'")
+    private void saveTotalPage(int total, int size) {
+        if(REDIS_CACHE_KEY.equals("page_"+total+size))
+            return;
+        REDIS_CACHE_KEY="page_"+total+size;
+
     }
 
     @Override
@@ -168,15 +182,7 @@ public class CourseServiceImpl implements ICourseService {
     }
 
 
-    @Cacheable(value = "course_course", key = "all")
-    private List<CoursesDto> getCourses(){
-        List<Course> courses=courseRepository.findAll();
-        List<CoursesDto> coursesDto= courses.stream()
-                .map(course -> modelMapper.map(course,CoursesDto.class)).toList();
-        log.info("Courses size: {}", coursesDto.size());
-        return  coursesDto;
 
-    }
     @Cacheable(value = "course_course", key ="'ById_'+#id")
     private CoursesDto findById(Long id){
         try {
@@ -199,18 +205,18 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     private void deleteCache() {
+        log.info("DELETE CACHE");
         String cacheKey= getTotalKey();
-        if(cacheKey==null)
-            return;
         deletePageOnCache(cacheKey);
     }
 
-    @CacheEvict(value = "course_course_page", key = "#cacheKey")
+    @CacheEvict(value = "course_course_data_page", key = "#cacheKey")
     private void deletePageOnCache(String cacheKey) {
+        log.info("deletePageOnCache {}", cacheKey);
     }
 
-    @Cacheable(value = "course_courses_total")
+    @Cacheable(value = "course_course_maxPage_value", key = "'ok'")
     private String getTotalKey() {
-        return null;
+        return REDIS_CACHE_KEY;
     }
 }

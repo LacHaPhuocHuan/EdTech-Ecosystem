@@ -40,12 +40,15 @@ public interface ICourseRest {
     @PatchMapping({"/{id}"})
     @Caching(
             evict = {
-                    @CacheEvict(value = "course_course", key ="ById_'+#id"),
+                    @CacheEvict(value = "course_course", key ="'ById_'+#id"),
                     @CacheEvict(value = "course_course", key = "all")
             }
     )
     @PreAuthorize("hasAnyRole('ROLE_TEACHER','ROLE_ADMIN')")
     public ResponseEntity<?> updateCourse(@RequestBody CoursesDto coursesDto, @PathVariable("id") Long id);
+    @DeleteMapping("/")
+    @CacheEvict(value = "course_course_data_page", key ="'page_110'")
+    public void deleteCache();
 
 
 

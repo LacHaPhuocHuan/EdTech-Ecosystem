@@ -103,6 +103,11 @@ public class CourseRestImpl implements ICourseRest {
         );
     }
 
+    @Override
+    public void deleteCache() {
+        log.info("DELETE");
+    }
+
 
     private <T> EntityModel<T> hateoas(T object){
         EntityModel<T> entityModel=EntityModel.of(object);
