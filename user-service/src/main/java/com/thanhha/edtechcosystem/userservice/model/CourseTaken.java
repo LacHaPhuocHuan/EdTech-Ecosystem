@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -25,8 +26,8 @@ public class CourseTaken {
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
-    private LocalDate attendAt;
-    private LocalDate completeAt;
+    private Date attendAt;
+    private Date completeAt;
 
 
 }

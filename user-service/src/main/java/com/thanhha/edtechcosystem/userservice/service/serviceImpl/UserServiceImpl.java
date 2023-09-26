@@ -20,8 +20,11 @@ import com.thanhha.edtechcosystem.userservice.utils.ValidatedUtils;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.ServerErrorException;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,49 +44,23 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final EducationalProfileRepository educationalProfileRepository;
     private final ModelMapper modelMapper;
-    private final RedisUtils redisUtils;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ValidatedUtils validatedUtils;
+    private static String maxPage="";
 
     @Override
+    @Cacheable(value = "user_user_id", key = "#id")
     public UserDto getUserById(String id) {
-        UserDto userInfo;
-        List<?> userOnCache= (List<?>) redisUtils.getDataFromCache("user_data");
-        List<UserDto> userList;
-        if( userOnCache !=null) {
-            log.info("System using data on cache.");
-            userList= (List<UserDto>) userOnCache.stream()
-                    .map(element-> (UserDto) element )
-                    .toList();
-            userInfo=userList.stream().filter(userDto -> userDto.getId().equals(id)).findFirst()
-                    .orElseThrow(()-> new ServerErrorException("Server arisen problem", 500) );
-        }else {
-            var user = userRepository.findById(id).orElseThrow(() -> new ServerErrorException("Server arisen problem", 500));
-            userInfo = modelMapper.map(user, UserDto.class);
-            try {
-                userInfo.setEducationProfileId(user.getEducationProfile().getId());
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        }
-        return userInfo;
+        var user = userRepository.findById(id).orElseThrow(() -> new ServerErrorException("Server arisen problem", 500));
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
+    @Cacheable(value = "user_user_all_page", key = "'page_'+#page")
     public UserPage getAllUser(int page, int size)  {
-        List<?> userOnCache= (List<?>) redisUtils.getDataFromCache("user_data");
-        List<UserDto> userList;
-        if( userOnCache !=null && !userOnCache.isEmpty()) {
-            redisUtils.setTTL("user_data", 60*60*24);
-            log.info("Using data on cache.");
-             userList= (List<UserDto>) userOnCache.stream()
-                    .map(element-> (UserDto) element )
-                    .toList();
-             if(!userList.isEmpty())
-                return new UserPage(userList,page,size);
-        }
+
         var userListOnDB=userRepository.findAll();
-        userList=userListOnDB.stream()
+        var userPage=new UserPage(userListOnDB.stream()
                 .map(user ->{
                     var mapUser=modelMapper.map(user, UserDto.class);
                     try {
@@ -92,11 +69,10 @@ public class UserServiceImpl implements UserService {
                         log.error(e.getMessage());
                     }
                     return mapUser;
-                }).collect(Collectors.toList());
-        redisUtils.putDataInCache("user_data", userList);
-
-
-        return new UserPage(userList,page,size);
+                }).collect(Collectors.toList()),page,size);
+        if(!maxPage.equals(userPage.getTotalPage()+""))
+            maxPage=userPage.getTotalPage()+"";
+        return userPage;
     }
 
 
@@ -117,7 +93,6 @@ public class UserServiceImpl implements UserService {
         user.setIsNonClock(true);
         user.setId(UUID.randomUUID().toString());
         userRepository.save(user);
-        redisUtils.evictDataFromCache("user_data");
         if(user.getRole().equals(Role.STUDENT)) {
             var educationProfile=EducationProfile.builder()
                     .user(user)
@@ -127,16 +102,20 @@ public class UserServiceImpl implements UserService {
                     .build();
             user.setEducationProfile(educationProfile);
             userRepository.save(user);
-            redisUtils.evictDataFromCache("edu_profile_data");
             educationalProfileRepository.save(educationProfile);
 
         }
-
-        redisUtils.evictDataFromCache("user_data");
+        evictMaxPage(maxPage);
         return modelMapper.map(user, UserDto.class);
     }
 
+    @CacheEvict(value = "user_user_all_page", key = "'page_'+#page")
+    private void evictMaxPage(String maxPage) {
+
+    }
+
     @Override
+    @CacheEvict(value = "user_user_id", key = "#idUser")
     public UserDto updateUser(UpdateUserRequest updateUser, String idUser) {
         var userFindOnDB=userRepository.findById(idUser).orElseThrow(()-> new ServerErrorException("Server arisen problem.", 500));
         if(!Objects.isNull(updateUser.getBirthDate()))
@@ -146,21 +125,20 @@ public class UserServiceImpl implements UserService {
         if(!Objects.isNull(updateUser.getFirstname()))
             userFindOnDB.setFirstname(updateUser.getFirstname());
         var updatedUser=userRepository.save(userFindOnDB);
-        redisUtils.evictDataFromCache("user_data");
         return modelMapper.map(updatedUser, UserDto.class);
     }
 
     @Override
+    @CacheEvict(value = "user_user_id", key = "#idUser")
     public UserDto deactivateAccount(String idUser) {
         var userFindInDB=userRepository.findById(idUser).orElseThrow(()->new UsernameNotFoundException("User don't exist."));
         userFindInDB.setIsNonClock(false);
-        redisUtils.evictDataFromCache("user_data");
         return modelMapper.map(userRepository.save(userFindInDB), UserDto.class);
     }
 
     @Override
+    @CacheEvict(value = "user_user_id", key = "#idUser")
     public UserDto deactivateMyAccount(String id, String password) {
-
         var userFindInDB=userRepository.findById(id).orElseThrow(()->new ServerErrorException("Server arisen problem.", 500));
         if(!passwordEncoder.encode(password).equals(userFindInDB.getPassword()))
             throw new BadRequestException("Password don't correct");

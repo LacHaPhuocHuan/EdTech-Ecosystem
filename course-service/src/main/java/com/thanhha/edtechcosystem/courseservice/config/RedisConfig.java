@@ -34,7 +34,6 @@ public class RedisConfig implements CachingConfigurer {
     }
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-
         return new LettuceConnectionFactory();
     }
     @Bean
@@ -43,7 +42,7 @@ public class RedisConfig implements CachingConfigurer {
                 .builder(RedisCacheWriter
                         .lockingRedisCacheWriter(connectionFactory, BatchStrategies
                                 .scan(1000)))
-                .cacheDefaults(defaultCacheConfig())
+                .cacheDefaults(defaultCacheConfig(Thread.currentThread().getContextClassLoader()))
                 .withInitialCacheConfigurations(singletonMap("predefined", defaultCacheConfig().disableCachingNullValues()))
                 .transactionAware()
                 .build();

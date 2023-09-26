@@ -105,10 +105,8 @@ public class AssessmentServiceImpl implements IAssessmentService {
         }
 
     }
-
     private boolean validAssessment(AssessmentDto assessmentDto) {
 //        todo...
-
         return true;
     }
 

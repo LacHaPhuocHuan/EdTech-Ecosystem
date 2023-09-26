@@ -77,7 +77,7 @@ public class CourseTakenRestImpl implements CourseTakenRest {
 
     @Override
     public ResponseEntity<?> completeCourse(CourseTakenDto courseTakenDto) {
-        var course=courseTakenService.createTakenCourse(courseTakenDto);
+        var course=courseTakenService.createTakenCourse(courseTakenDto,courseTakenDto.getIdUser());
 
         return ResponseEntity.ok(DataResponse.builder()
                 .data(hateoasCourseTaken(course))

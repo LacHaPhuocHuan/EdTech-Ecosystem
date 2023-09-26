@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/users/course-taken")
 public interface CourseTakenRest {
     @GetMapping({"/all"})
-    // PHAN TRANG:::: dung Pageable
-    //Nguoi dung tu phan trang
     public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size

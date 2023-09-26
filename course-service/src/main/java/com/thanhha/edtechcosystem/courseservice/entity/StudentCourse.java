@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "tbEnrollment")
-public class Enrollment {
+public class StudentCourse {
     @Id
     private String enrolledCode;
 
@@ -27,4 +27,8 @@ public class Enrollment {
     private Student student;
 
     private Date enrolledDate;
+
+    private Status status;
+    private Float GPA;
+    private Date completedDate;
 }

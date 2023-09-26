@@ -10,7 +10,10 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.BatchStrategies;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -22,6 +25,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.sql.SQLException;
 import java.time.Duration;
+
+import static java.util.Collections.singletonMap;
+import static org.springframework.data.redis.cache.RedisCacheConfiguration.defaultCacheConfig;
 
 @Configuration
 @EnableCaching
@@ -36,15 +42,31 @@ public class RedisConfig implements CachingConfigurer {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
-////        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setDefaultSerializer(new Json);
-////        redisTemplate.setValueSerializer(new StringRedisSerializer());
-//        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-////        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
+    }
+
+    @Bean
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory){
+        return RedisCacheManager
+                .builder(RedisCacheWriter
+                        .lockingRedisCacheWriter(connectionFactory, BatchStrategies
+                                .scan(1000)))
+                .cacheDefaults(defaultCacheConfig(Thread.currentThread().getContextClassLoader()))
+                .withInitialCacheConfigurations(singletonMap("predefined", defaultCacheConfig().disableCachingNullValues()))
+                .transactionAware()
+                .build();
+    }
+
+    @Bean
+    public RedisCacheConfiguration redisCacheConfiguration(){
+        return RedisCacheConfiguration.defaultCacheConfig().computePrefixWith(cacheName -> "( ͡° ᴥ ͡°)"+ cacheName)
+                .entryTtl(Duration.ofSeconds(1))
+                .disableCachingNullValues()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
     }
 
 

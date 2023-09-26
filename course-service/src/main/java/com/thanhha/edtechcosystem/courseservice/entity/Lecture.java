@@ -31,4 +31,5 @@ public class Lecture {
     @OneToMany(mappedBy = "lecture")
     private List<Document> documents;
 
+
 }

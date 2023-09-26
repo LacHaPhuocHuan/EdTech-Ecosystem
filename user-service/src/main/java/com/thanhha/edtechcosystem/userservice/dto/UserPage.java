@@ -22,7 +22,12 @@ public class UserPage {
         this.page = page;
         this.limit = limit;
         this.startNumber=page*limit-limit;
-        this.totalPage=allUser.size()/limit +1;
+        double totalDouble=(double)allUser.size() % ((double) limit);
+        if(totalPage>0)
+            this.totalPage=allUser.size()/limit +1;
+        else{
+            this.totalPage=allUser.size()/limit;
+        }
         if( !(startNumber>allUser.size()) ) {
             this.endNumber = (page) * limit;
             if (this.endNumber > allUser.size())

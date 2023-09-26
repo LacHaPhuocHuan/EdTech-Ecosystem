@@ -7,9 +7,13 @@ import com.thanhha.edtechcosystem.userservice.repositiry.UserRepository;
 import com.thanhha.edtechcosystem.userservice.service.CourseTakenService;
 import com.thanhha.edtechcosystem.userservice.utils.RedisUtils;
 import jakarta.ws.rs.NotFoundException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,53 +22,47 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Getter
 public class CourseTakenServiceImpl implements CourseTakenService {
     private final CourseTakenRepository courseTakenRepository;
-    private final RedisUtils redisUtils;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
+    private String maxPage="";
+
+
+
+
+
     @Override
     public List<CourseTakenDto> getPage(int page, int size) {
         List<CourseTakenDto> courses=getOnCache();
-        if(courses==null){
-            courses=courseTakenRepository
-                    .findAll().stream()
-                    .map(courseTaken -> modelMapper.map(courseTaken, CourseTakenDto.class))
-                    .toList();
-            redisUtils.putDataInCache("course_data", courses);
-        }
 
         return getToPage(page,size,courses);
     }
 
     @Override
+    @Cacheable(value = "user_course_id", key = "#idCourseTaken")
     public CourseTakenDto findById(Long idCourseTaken) {
-        List<CourseTakenDto> courses=getOnCache();
-        if(courses!=null){
-            if(courses.stream().anyMatch(courseTakenDto -> courseTakenDto.getIdCourse().equals(idCourseTaken)))
-                return courses.stream().filter(courseTakenDto -> courseTakenDto.getIdCourse().equals(idCourseTaken)).findFirst().orElseThrow(NotFoundException::new);
-        }
         var course=courseTakenRepository.findById(idCourseTaken).orElseThrow(NotFoundException::new);
         return modelMapper.map(course, CourseTakenDto.class);
     }
 
     @Override
-    public List<CourseTakenDto> getPageByIdUser(int page, int size, String id) {
-        List<CourseTakenDto> courses=getOnCache();
-        if(courses==null){
-            courses=courseTakenRepository
-                    .findByUser(userRepository.findById(id).orElseThrow(NotFoundException::new)).stream()
-                    .map(courseTaken -> modelMapper.map(courseTaken, CourseTakenDto.class))
-                    .toList();
-            redisUtils.putDataInCache("course_data", courses);
-        }else{
-            courses=courses.stream().filter(courseTakenDto -> courseTakenDto.getIdUser().equals(id)).toList();
-        }
+    @Cacheable(value = "user_course_idUser", key = "#idUser")
+    public List<CourseTakenDto> getPageByIdUser(int page, int size, String idUser) {
+        List<CourseTakenDto> courses=getOnCache().stream().filter(courseTakenDto -> courseTakenDto.getIdUser().equals(idUser)).toList();
         return getToPage(page,size,courses);
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "user_course_idUser", key ="#idUser"),
+                    @CacheEvict(value = "user_course_all", key = "'all'"),
+            }
+    )
     @Override
-    public CourseTakenDto createTakenCourse(CourseTakenDto courseTakenDto) {
+    public CourseTakenDto createTakenCourse(CourseTakenDto courseTakenDto, String idUser) {
+         deleteCache(getMaxPage());
         var user=userRepository.findById(courseTakenDto.getIdUser()).orElseThrow(()->new NotFoundException("Id user don't correct"));
         var courseTaken=modelMapper.map(courseTakenDto, CourseTaken.class);
         courseTaken.setUser(user);
@@ -72,7 +70,24 @@ public class CourseTakenServiceImpl implements CourseTakenService {
         return modelMapper.map(addedCourse, CourseTakenDto.class);
     }
 
+
+
+
+
+
+
+
+
+
+    @CacheEvict(value = "user_takenCourse", key = "#maxPage")
+    private void deleteCache(String maxPage) {
+    }
+
     private List<CourseTakenDto> getToPage(int page, int size, List<CourseTakenDto> courses) {
+        int maxPInt=(courses.size()+1)/size+1;
+        var maxPStr="page_"+page+maxPInt;
+        if(!maxPage.equals(maxPStr))
+            maxPage=maxPStr;
         int startNumber=page*size-size;
         int endNumber=page*size-1;
         log.info("Starting Number is {}", startNumber);
@@ -96,10 +111,11 @@ public class CourseTakenServiceImpl implements CourseTakenService {
         return toPage(startNumber+1,endNumber,courses,courseTakenDtos);
     }
 
+    @Cacheable(value = "user_course_all", key = "'all'")
     private List<CourseTakenDto> getOnCache() {
-        List<?> dataOnCache = (List<?>) redisUtils.getDataFromCache("course_data");
-        if(dataOnCache!=null)
-            return dataOnCache.stream().map(data->(CourseTakenDto) data).toList();
-        return null;
+        return courseTakenRepository
+                .findAll().stream()
+                .map(courseTaken -> modelMapper.map(courseTaken, CourseTakenDto.class))
+                .toList();
     }
 }

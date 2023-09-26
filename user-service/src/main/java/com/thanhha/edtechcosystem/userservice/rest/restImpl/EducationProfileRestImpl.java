@@ -24,7 +24,7 @@ public class EducationProfileRestImpl implements EducationProfileRest {
     private final EducationProfileService educationProfileService;
     @Override
     public ResponseEntity<?> getMyProfile() {
-        var educationalProfile=educationProfileService.getMyProfile(userDetailsService.getCurrentUser());
+        var educationalProfile=educationProfileService.getMyProfile();
         EntityModel<EducationProfileDto> profileEntityModel= hateoasProfile(educationalProfile);
 
         return ResponseEntity.ok(DataResponse.builder()

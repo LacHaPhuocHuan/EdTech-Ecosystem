@@ -9,7 +9,7 @@ import com.thanhha.edtechcosystem.userservice.model.User;
 import java.util.List;
 
 public interface EducationProfileService {
-    EducationProfileDto getMyProfile(User user);
+    EducationProfileDto getMyProfile();
 
     List<EducationProfileDto> getAllProfile() ;
 

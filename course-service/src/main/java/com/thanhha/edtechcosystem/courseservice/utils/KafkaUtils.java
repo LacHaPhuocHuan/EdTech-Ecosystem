@@ -1,4 +1,4 @@
-package com.thanhha.edtechcosystem.userservice.utils;
+package com.thanhha.edtechcosystem.courseservice.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
