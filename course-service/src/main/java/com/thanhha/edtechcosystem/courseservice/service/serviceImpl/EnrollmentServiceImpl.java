@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class EnrollmentServiceImpl implements IEnrollmentService {
         var username=authentication.getPrincipal();
         var infoEnrollment= repository.findById(code)
                 .orElseThrow(()->new NotFoundException("Code is incorrect"));
-        if(repository.existsByEnrolledCodeAndStudentId(code,infoEnrollment.getStudent().getId()))
+        if(Objects.nonNull(infoEnrollment.getCompletedDate()))
             throw new BadRequestException("You was completely before.");
         if(!username.toString().trim().equals(infoEnrollment.getStudent().getEmail().trim()))
             throw new AccessDeniedException("You do not have permission to access this resource");
