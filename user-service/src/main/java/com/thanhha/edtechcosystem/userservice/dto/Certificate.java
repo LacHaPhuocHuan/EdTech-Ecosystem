@@ -17,7 +17,7 @@ public class Certificate {
     private String studentId;
     private Date enrolledDate;
     private float GPA;
-    private Date completeDate;
+    private Date completedDate;
     private String classification;
     private Long courseId;
 

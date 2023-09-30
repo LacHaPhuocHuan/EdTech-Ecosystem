@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface CourseTakenRepository extends JpaRepository<CourseTaken, Long> {
     List<CourseTaken> findByUser(User user);
+
+    boolean existsByUserIdAndIdCourse(String id, Long idCourse);
 }

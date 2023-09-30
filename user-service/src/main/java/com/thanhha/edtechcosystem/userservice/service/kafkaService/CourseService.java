@@ -20,18 +20,23 @@ import java.util.Arrays;
 public class CourseService {
     private final CourseTakenRepository courseTakenRepository;
     private final UserRepository userRepository;
-    @KafkaListener(id = "userService", topics = "taken-course")
-    public void ListenerTakenCourse(byte[] bytes) throws IOException {
-        log.info(Arrays.toString(bytes));
+    @KafkaListener(id="user_service", topics = "taken-course")
+    public void ListenerTakenCourse(String jsonPayload) throws IOException {
+        log.info("ListenerTakenCourse");
+        log.info(jsonPayload);
         ObjectMapper objectMapper=  new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        var certificate=objectMapper.readValue(bytes, Certificate.class);
+        var certificate=objectMapper.readValue(jsonPayload, Certificate.class);
         var user= userRepository.findById(certificate.getStudentId()).orElseThrow();
+        if(courseTakenRepository.existsByUserIdAndIdCourse(user.getId(), certificate.getCourseId())) {
+            log.info("Existed!");
+            return;
+        }
         var takenCourse=CourseTaken.builder()
                 .idCourse(certificate.getCourseId())
                 .name(certificate.getCourseTitle())
                 .user(user)
-                .completeAt(certificate.getCompleteDate())
+                .completeAt(certificate.getCompletedDate())
                 .attendAt(certificate.getEnrolledDate())
                 .build();
 

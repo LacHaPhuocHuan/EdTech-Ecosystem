@@ -8,6 +8,7 @@ import com.thanhha.edtechcosystem.courseservice.repository.StudentAssessmentRepo
 import com.thanhha.edtechcosystem.courseservice.repository.StudentCourseRepository;
 import com.thanhha.edtechcosystem.courseservice.service.IEnrollmentService;
 import com.thanhha.edtechcosystem.courseservice.utils.KafkaUtils;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -35,6 +36,8 @@ public class EnrollmentServiceImpl implements IEnrollmentService {
         var username=authentication.getPrincipal();
         var infoEnrollment= repository.findById(code)
                 .orElseThrow(()->new NotFoundException("Code is incorrect"));
+        if(repository.existsByEnrolledCodeAndStudentId(code,infoEnrollment.getStudent().getId()))
+            throw new BadRequestException("You was completely before.");
         if(!username.toString().trim().equals(infoEnrollment.getStudent().getEmail().trim()))
             throw new AccessDeniedException("You do not have permission to access this resource");
         infoEnrollment.setStatus(Status.completion);
